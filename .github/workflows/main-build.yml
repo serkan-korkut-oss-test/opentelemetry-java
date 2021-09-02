@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   build:
@@ -94,3 +95,12 @@ jobs:
           SONATYPE_KEY: ${{ secrets.SONATYPE_KEY }}
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
           GPG_PASSWORD: ${{ secrets.GPG_PASSWORD }}
+      - name: Thundra Maven Test Instrumentation
+        uses: thundra-io/thundra-maven-test-action@v1
+        with:
+          apikey: ${{ secrets.THUNDRA_API_KEY }}
+          project_id: ${{ secrets.THUNDRA_PROJECT_ID }}
+          command: mvn clean install
+        env:
+          THUNDRA_AGENT_REPORT_REST_BASEURL: https://collector.thundra.us/v1
+          THUNDRA_AGENT_BROKER_ENABLE: false
